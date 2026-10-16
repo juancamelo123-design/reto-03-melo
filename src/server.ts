@@ -20,7 +20,7 @@ const llm = crearAdaptador(process.env)
 const sesiones = new Map<string, Sesion>()
 const MAX_SESIONES = 200
 
-const ChatBody = z.object({ sessionId: z.string().max(100).optional(), message: z.string().min(1).max(4000) })
+const ChatBody = z.object({ sessionId: z.string().max(100).nullish(), message: z.string().min(1).max(4000) })
 
 const MIME: Record<string, string> = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml" }
 
@@ -61,7 +61,7 @@ const server = createServer(async (req, res) => {
       const body = ChatBody.safeParse(await leerCuerpo(req))
       if (!body.success) return json(res, 400, { error: "Se espera { sessionId?, message }" })
       if (!llm) return json(res, 503, { error: "El servidor no tiene configurada la clave del modelo (ANTHROPIC_API_KEY, OPENAI_API_KEY o GEMINI_API_KEY)." })
-      const sesion = obtenerSesion(body.data.sessionId)
+      const sesion = obtenerSesion(body.data.sessionId ?? undefined)
       const r = await ejecutarTurno(llm, sesion, body.data.message, cfg)
       return json(res, 200, { sessionId: sesion.id, ...r })
     }
