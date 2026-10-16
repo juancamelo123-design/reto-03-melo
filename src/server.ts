@@ -60,7 +60,7 @@ const server = createServer(async (req, res) => {
     if (req.method === "POST" && url.pathname === "/api/chat") {
       const body = ChatBody.safeParse(await leerCuerpo(req))
       if (!body.success) return json(res, 400, { error: "Se espera { sessionId?, message }" })
-      if (!llm) return json(res, 503, { error: "El servidor no tiene configurada la clave del modelo (ANTHROPIC_API_KEY u OPENAI_API_KEY)." })
+      if (!llm) return json(res, 503, { error: "El servidor no tiene configurada la clave del modelo (ANTHROPIC_API_KEY, OPENAI_API_KEY o GEMINI_API_KEY)." })
       const sesion = obtenerSesion(body.data.sessionId)
       const r = await ejecutarTurno(llm, sesion, body.data.message, cfg)
       return json(res, 200, { sessionId: sesion.id, ...r })

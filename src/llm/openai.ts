@@ -15,12 +15,16 @@ type RespuestaApi = {
 
 /** Implementación para Chat Completions de OpenAI. Traduce el formato interno (bloques) al de OpenAI. */
 export class OpenAiAdapter implements LlmAdapter {
-  readonly provider = "openai"
-
+  /**
+   * Sirve para cualquier API compatible con Chat Completions (OpenAI, Google Gemini, Groq…):
+   * solo cambian `baseUrl` y la clave.
+   */
   constructor(
     private readonly apiKey: string,
     readonly model: string,
     private readonly timeoutMs: number,
+    private readonly baseUrl = "https://api.openai.com/v1",
+    readonly provider = "openai",
   ) {}
 
   private traducir(system: string, mensajes: Mensaje[]): MsgOpenAi[] {
@@ -42,7 +46,7 @@ export class OpenAiAdapter implements LlmAdapter {
 
   async enviar(system: string, mensajes: Mensaje[], herramientas: HerramientaSpec[]): Promise<RespuestaLlm> {
     const res = await fetchConTimeout(
-      "https://api.openai.com/v1/chat/completions",
+      `${this.baseUrl}/chat/completions`,
       {
         method: "POST",
         headers: { "content-type": "application/json", authorization: `Bearer ${this.apiKey}` },

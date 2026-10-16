@@ -64,7 +64,7 @@ Archivo: `src/agent/loop.ts`.
 
 ## 4. Elección del modelo
 
-- **Proveedor por defecto:** Anthropic, con `claude-sonnet-4-5` (configurable con `LLM_MODEL`). La implementación de OpenAI viene incluida; cambiar de proveedor es una variable de entorno y no toca el ciclo.
+- **Proveedor por defecto:** Anthropic, con `claude-sonnet-4-5` (configurable con `LLM_MODEL`). Vienen incluidas también OpenAI y Google Gemini (a través de un adaptador compatible con Chat Completions con `baseUrl` configurable); cambiar de proveedor es una variable de entorno y no toca el ciclo.
 - **Por qué:** la tarea es de orquestación de herramientas y redacción clara en español, no de razonamiento numérico, porque los números los hacen las herramientas. Un modelo de gama media con buen *tool use* es suficiente. Para volumen alto, un modelo pequeño (Haiku o mini) reduce el costo de 3 a 5 veces sin cambiar la arquitectura, porque el control no depende del modelo.
 - **Costo estimado por caso.** Supuesto: tarifa de referencia de un modelo de gama media de **USD 3 por millón de tokens de entrada y USD 15 por millón de salida**; hay que verificar la tarifa vigente.
   - Prompt de sistema, conocimiento y esquemas: ≈ 2.500 tokens por llamada.

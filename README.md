@@ -34,9 +34,9 @@ Procesa los 6 casos llamando directamente a las herramientas, sin API key. Muest
 
 | Variable | Obligatoria | Uso |
 |---|---|---|
-| `LLM_PROVIDER` | No | `anthropic` (default) u `openai` |
-| `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` | Sí (una) | Clave del modelo. Solo vive en el backend. |
-| `LLM_MODEL` | No | Default `claude-sonnet-4-5` / `gpt-4.1-mini` |
+| `LLM_PROVIDER` | No | `anthropic` (default), `openai` o `gemini` |
+| `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` / `GEMINI_API_KEY` | Sí (una) | Clave del modelo. Solo vive en el backend. |
+| `LLM_MODEL` | No | Default `claude-sonnet-4-5` / `gpt-4.1-mini` / `gemini-2.5-flash` |
 | `MAX_ITERACIONES` | No | Tope de pasos herramienta → modelo por turno (25) |
 | `MAX_TOKENS_SESION` | No | Tope de tokens por sesión (300000) |
 | `LLM_TIMEOUT_MS` | No | Timeout al proveedor (60000) |
@@ -58,7 +58,7 @@ src/tools/oc.ts              ejecución: herramientas zod → oc_leer_paquete, o
 src/tools/registry.ts        nombra (<archivo>_<export>), valida args con zod y expone JSON Schema al modelo
 src/domain/                  reglas puras: lectura, validación RC1–RC10, payload, evidencia, log de control
 src/agent/loop.ts            ciclo del agente, tope de iteraciones, confirmación humana, log
-src/llm/                     adaptador propio + Anthropic + OpenAI
+src/llm/                     adaptador propio + Anthropic + OpenAI-compatible (OpenAI, Gemini)
 src/sap/                     interfaz SapAdapter + mock sobre out/sap/
 web/index.html               chat: historial, llamadas a herramientas, confirmación resaltada
 modulo/                      bonus: el agente empaquetado (generado desde las mismas fuentes)
