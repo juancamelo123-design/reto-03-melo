@@ -2,7 +2,8 @@
 
 Agente conversacional que lee el paquete de una solicitud de compra, lo valida contra los maestros (RC1–RC10), construye la OC, genera la evidencia de aprobación y la crea en un SAP simulado. Las excepciones se devuelven al humano con una recomendación.
 
-- **Link de prueba:** `<URL de Render>` (sin clave de acceso)
+- **Link de prueba:** https://reto-03-oc-agent.onrender.com (sin clave de acceso; en el plan gratuito de Render la primera carga puede tardar ~50 s si el servicio estaba dormido)
+- **Repositorio:** https://github.com/juancamelo123-design/reto-03-melo
 - **Planteamiento de la solución:** [SOLUCION.md](SOLUCION.md)
 
 ## Levantar en local (un comando)
