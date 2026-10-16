@@ -1,0 +1,29 @@
+{
+  "name": "reto-03-oc-agent",
+  "version": "1.0.0",
+  "description": "Agente conversacional de Órdenes de Compra SAP — Reto 03 Periferia IT Group",
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "start": "tsx src/server.ts",
+    "demo": "tsx demo.ts",
+    "typecheck": "tsc --noEmit",
+    "modulo:build": "tsx scripts/build-modulo.ts",
+    "modulo:check": "tsx scripts/build-modulo.ts --check"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "zod": "^4.6.7",
+    "tsx": "^4.23.15"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  }
+}
