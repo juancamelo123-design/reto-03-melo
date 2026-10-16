@@ -64,11 +64,11 @@ Archivo: `src/agent/loop.ts`.
 
 ## 4. Elección del modelo
 
-- **Proveedor por defecto:** Anthropic, con `claude-sonnet-4-5` (configurable con `LLM_MODEL`). Vienen incluidas también OpenAI y Google Gemini (a través de un adaptador compatible con Chat Completions con `baseUrl` configurable); cambiar de proveedor es una variable de entorno y no toca el ciclo.
+- **Proveedor por defecto:** Anthropic, con `claude-sonnet-5-5` (configurable con `LLM_MODEL`). Vienen incluidas también OpenAI y Google Gemini (a través de un adaptador compatible con Chat Completions con `baseUrl` configurable); cambiar de proveedor es una variable de entorno y no toca el ciclo.
 - **Por qué:** la tarea es de orquestación de herramientas y redacción clara en español, no de razonamiento numérico, porque los números los hacen las herramientas. Un modelo de gama media con buen *tool use* es suficiente. Para volumen alto, un modelo pequeño (Haiku o mini) reduce el costo de 3 a 5 veces sin cambiar la arquitectura, porque el control no depende del modelo.
 - **Costo estimado por caso.** Supuesto: tarifa de referencia de un modelo de gama media de **USD 3 por millón de tokens de entrada y USD 15 por millón de salida**; hay que verificar la tarifa vigente.
   - Prompt de sistema, conocimiento y esquemas: ≈ 2.500 tokens por llamada.
-  - Un caso típico hace ≈ 4 llamadas al modelo con contexto creciente: ≈ 18.000 tokens de entrada y ≈ 1.500 de salida.
+  - Un caso típico hace 3 o 4 llamadas al modelo con contexto creciente. Medido en la prueba real: ≈ 20.000 tokens por caso, de los cuales ≈ 18.000 son de entrada y ≈ 1.500–2.000 de salida.
   - Costo: ≈ USD 0,054 + 0,023 ≈ **USD 0,08 por caso (≈ COP 300)**. Con modelo pequeño, ≈ USD 0,02.
   - Para comparar: una OC digitada a mano toma minutos de analista y un error de centro de costo se corrige en el cierre.
 - **Optimización ya aplicada:** `oc_leer_paquete` no devuelve el texto completo de la cotización al modelo, porque no lo necesita para orquestar.

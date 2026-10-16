@@ -17,5 +17,5 @@ export function crearAdaptador(env: NodeJS.ProcessEnv): LlmAdapter | null {
     return new OpenAiAdapter(env.OPENAI_API_KEY, env.LLM_MODEL ?? "gpt-4.1-mini", timeout)
   }
   if (!env.ANTHROPIC_API_KEY) return null
-  return new AnthropicAdapter(env.ANTHROPIC_API_KEY, env.LLM_MODEL ?? "claude-sonnet-4-5", timeout)
+  return new AnthropicAdapter(env.ANTHROPIC_API_KEY, env.LLM_MODEL ?? "claude-sonnet-5-5", timeout)
 }
