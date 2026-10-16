@@ -1,14 +1,14 @@
-import { fetchConTimeout, LlmError, type Bloque, type HerramientaSpec, type LlmAdapter, type Mensaje, type RespuestaLlm } from "./adapter.js"
+import { fetchConReintentos, LlmError, type Bloque, type HerramientaSpec, type LlmAdapter, type Mensaje, type RespuestaLlm } from "./adapter.js"
 
 type MsgOpenAi =
   | { role: "system" | "user"; content: string }
-  | { role: "assistant"; content: string | null; tool_calls?: Array<{ id: string; type: "function"; function: { name: string; arguments: string } }> }
+  | { role: "assistant"; content: string | null; tool_calls?: Array<{ id: string; type: "function"; function: { name: string; arguments: string }; extra_content?: Record<string, unknown> }> }
   | { role: "tool"; tool_call_id: string; content: string }
 
 type RespuestaApi = {
   choices: Array<{
     finish_reason: string
-    message: { content: string | null; tool_calls?: Array<{ id: string; function: { name: string; arguments: string } }> }
+    message: { content: string | null; tool_calls?: Array<{ id: string; function: { name: string; arguments: string }; extra_content?: Record<string, unknown> }> }
   }>
   usage: { prompt_tokens: number; completion_tokens: number }
 }
@@ -33,7 +33,9 @@ export class OpenAiAdapter implements LlmAdapter {
       const texto = m.content.flatMap((b) => (b.type === "text" ? [b.text] : [])).join("\n")
       if (m.role === "assistant") {
         const calls = m.content.flatMap((b) =>
-          b.type === "tool_use" ? [{ id: b.id, type: "function" as const, function: { name: b.name, arguments: JSON.stringify(b.input) } }] : [],
+          b.type === "tool_use"
+            ? [{ id: b.id, type: "function" as const, function: { name: b.name, arguments: JSON.stringify(b.input) }, ...(b.extra ? { extra_content: b.extra } : {}) }]
+            : [],
         )
         out.push({ role: "assistant", content: texto || null, ...(calls.length ? { tool_calls: calls } : {}) })
       } else {
@@ -45,7 +47,7 @@ export class OpenAiAdapter implements LlmAdapter {
   }
 
   async enviar(system: string, mensajes: Mensaje[], herramientas: HerramientaSpec[]): Promise<RespuestaLlm> {
-    const res = await fetchConTimeout(
+    const res = await fetchConReintentos(
       `${this.baseUrl}/chat/completions`,
       {
         method: "POST",
@@ -71,7 +73,8 @@ export class OpenAiAdapter implements LlmAdapter {
       } catch {
         input = {}
       }
-      content.push({ type: "tool_use", id: c.id, name: c.function.name, input })
+      // Gemini 3 exige devolver su thought_signature (viene en extra_content) en el siguiente turno.
+      content.push({ type: "tool_use", id: c.id, name: c.function.name, input, ...(c.extra_content ? { extra: c.extra_content } : {}) })
     }
     return {
       content,

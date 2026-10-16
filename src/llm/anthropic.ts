@@ -1,9 +1,17 @@
-import { fetchConTimeout, LlmError, type Bloque, type HerramientaSpec, type LlmAdapter, type Mensaje, type RespuestaLlm } from "./adapter.js"
+import { fetchConReintentos, LlmError, type Bloque, type HerramientaSpec, type LlmAdapter, type Mensaje, type RespuestaLlm } from "./adapter.js"
 
 type RespuestaApi = {
   content: Array<{ type: string; text?: string; id?: string; name?: string; input?: Record<string, unknown> }>
   stop_reason: string
   usage: { input_tokens: number; output_tokens: number }
+}
+
+/** Quita los campos internos que la API de Anthropic no acepta. */
+function limpiar(mensajes: Mensaje[]): Mensaje[] {
+  return mensajes.map((m) => ({
+    ...m,
+    content: m.content.map((b) => (b.type === "tool_use" ? { type: b.type, id: b.id, name: b.name, input: b.input } : b)),
+  }))
 }
 
 /** Implementación para la Messages API de Anthropic (fetch directo, sin SDK). */
@@ -18,12 +26,12 @@ export class AnthropicAdapter implements LlmAdapter {
   ) {}
 
   async enviar(system: string, mensajes: Mensaje[], herramientas: HerramientaSpec[]): Promise<RespuestaLlm> {
-    const res = await fetchConTimeout(
+    const res = await fetchConReintentos(
       "https://api.anthropic.com/v1/messages",
       {
         method: "POST",
         headers: { "content-type": "application/json", "x-api-key": this.apiKey, "anthropic-version": "2023-06-01" },
-        body: JSON.stringify({ model: this.model, max_tokens: this.maxTokens, system, messages: mensajes, tools: herramientas }),
+        body: JSON.stringify({ model: this.model, max_tokens: this.maxTokens, system, messages: limpiar(mensajes), tools: herramientas }),
       },
       this.timeoutMs,
     )

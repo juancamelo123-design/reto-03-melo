@@ -36,7 +36,7 @@ Procesa los 6 casos llamando directamente a las herramientas, sin API key. Muest
 |---|---|---|
 | `LLM_PROVIDER` | No | `anthropic` (default), `openai` o `gemini` |
 | `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` / `GEMINI_API_KEY` | Sí (una) | Clave del modelo. Solo vive en el backend. |
-| `LLM_MODEL` | No | Default `claude-sonnet-4-5` / `gpt-4.1-mini` / `gemini-2.5-flash` |
+| `LLM_MODEL` | No | Default `claude-sonnet-4-5` / `gpt-4.1-mini` / `gemini-3.8-flash` |
 | `MAX_ITERACIONES` | No | Tope de pasos herramienta → modelo por turno (25) |
 | `MAX_TOKENS_SESION` | No | Tope de tokens por sesión (300000) |
 | `LLM_TIMEOUT_MS` | No | Timeout al proveedor (60000) |

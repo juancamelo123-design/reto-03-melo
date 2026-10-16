@@ -10,7 +10,7 @@ export function crearAdaptador(env: NodeJS.ProcessEnv): LlmAdapter | null {
     // Google Gemini vía su endpoint compatible con OpenAI (tiene capa gratuita en Google AI Studio).
     if (!env.GEMINI_API_KEY) return null
     const base = "https://generativelanguage.googleapis.com/v1beta/openai"
-    return new OpenAiAdapter(env.GEMINI_API_KEY, env.LLM_MODEL ?? "gemini-2.5-flash", timeout, base, "gemini")
+    return new OpenAiAdapter(env.GEMINI_API_KEY, env.LLM_MODEL ?? "gemini-3.8-flash", timeout, base, "gemini")
   }
   if (proveedor === "openai") {
     if (!env.OPENAI_API_KEY) return null
